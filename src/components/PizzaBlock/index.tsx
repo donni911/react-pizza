@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem, selectCartItem } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
 export type Pizza = {
   id: number;
@@ -8,17 +11,22 @@ export type Pizza = {
   sizes: number[];
   price: number;
   category: number;
+  count?: number;
   rating: number;
 };
 
-type Props = {
-  pizza: Pizza
+type PizzaBlockProps = {
+  key?: number,
+  pizza: Pizza;
 };
 
-const PizzaBlock = ({ pizza }: Props) => {
-  const typeNames: string[] = ['тонке', 'традиційне'];
+const typeNames: string[] = ['тонке', 'традиційне'];
 
-  const [pizzaCount, setPizzaCount] = useState(0);
+const PizzaBlock: React.FC<PizzaBlockProps> = ({ pizza }) => {
+  const dispatch = useDispatch();
+  const cartItem = useSelector(selectCartItem(pizza.id));
+  const currentCount = cartItem?.count ? cartItem.count : 0;
+
   const [activeType, setActiveType] = useState<number | string>(0);
   const [activeSize, setActiveSize] = useState(0);
 
@@ -28,13 +36,24 @@ const PizzaBlock = ({ pizza }: Props) => {
   }, []);
 
   const handleAddButton = () => {
-    setPizzaCount(pizzaCount + 1);
+    const item = {
+      id: pizza.id,
+      title: pizza.title,
+      price: pizza.price,
+      imageUrl: pizza.imageUrl,
+      type: activeType,
+      size: activeSize
+    };
+
+    dispatch(addItem(item));
   };
 
   return (
     <div className="pizza-block">
-      <img className="pizza-block__image" src={pizza.imageUrl} alt={pizza.title} />
-      <h4 className="pizza-block__title">{pizza.title}</h4>
+      <div className="u-cover">
+        <img className="pizza-block__image" src={pizza.imageUrl} alt={pizza.title} />
+      </div>
+      <Link to={`pizza/${pizza.id}`} className="pizza-block__title">{pizza.title}</Link>
       <div className="pizza-block__selector">
         <ul>
           {pizza.types.length &&
@@ -74,7 +93,7 @@ const PizzaBlock = ({ pizza }: Props) => {
             />
           </svg>
           <span>Добавити</span>
-          <i>{pizzaCount}</i>
+          <i>{currentCount}</i>
         </button>
       </div>
     </div>

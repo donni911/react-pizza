@@ -11,8 +11,12 @@
 	}
 
 	&__image {
-		width: 260px;
-		transition: ease-in 0.150s transform;
+		transition: ease-in 0.15s transform;	
+		position: absolute;
+		inset: 0px;
+		height: 100%;
+		width: 100%;
+		padding: 35px;
 	}
 
 	&__title {

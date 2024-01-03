@@ -1,9 +1,5 @@
-import React from 'react'
-import NotFoundBlock from '../components/NotFoundBlock/index.tsx'
-const NotFound = () => {
-    return (
-        <NotFoundBlock />
-    )
-}
+import NotFoundBlock from '../components/NotFoundBlock/index';
 
-export default NotFound
+const NotFound = () => <NotFoundBlock />;
+
+export default NotFound;

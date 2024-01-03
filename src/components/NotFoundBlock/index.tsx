@@ -2,11 +2,12 @@ import React from 'react'
 
 import styles from './NotFoundBlock.module.scss';
 
-console.log(styles);
-
 const NotFoundBlock = () => {
     return (
-        <h1 className={styles.root}>Нічого не знайдено :(</h1>
+        <div className={styles.root}>
+            <h1 >Нічого не знайдено :(</h1>
+            <p className={styles.description}>На жаль такої сторінки немає.</p>
+        </div>
     )
 }
 

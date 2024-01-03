@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React from "react";
 
-const Categories = () => {
-  const [activeCategory, setActiveCategory] = useState(0);
+type CategoriesProps = {
+  value: number,
+  onClickCategory: any;
+};
+
+const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
 
   const categories = [
     {
@@ -32,13 +36,13 @@ const Categories = () => {
 
   return (
     <div className="categories">
-      <ul>
+      <ul className='categories-list'>
         {categories.length &&
           categories.map((category) => (
             <li
               key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={activeCategory === category.id ? 'active' : ''}>
+              onClick={() => onClickCategory(category.id)}
+              className={`categories-list__item ${value === category.id ? 'active' : ''}`}>
               {category.name}
             </li>
           ))}

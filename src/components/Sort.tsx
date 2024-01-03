@@ -1,41 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectSort, setSort } from "../redux/slices/filterSlice";
+
+type SortItem = {
+  sortProperty: string,
+  name: string;
+};
+
+export const sortList: SortItem[] = [
+  {
+    sortProperty: '-rating',
+    name: "популярності (desc)",
+  },
+  {
+    sortProperty: 'rating',
+    name: "популярності (asc)",
+  },
+  {
+    sortProperty: '-price',
+    name: "ціні (desc)",
+  },
+  {
+    sortProperty: 'price',
+    name: "ціні (asc)",
+  },
+  {
+    sortProperty: '-title',
+    name: "алфавіту (desc)",
+  },
+  {
+    sortProperty: 'title',
+    name: "алфавіту (asc)",
+  },
+];
 
 const Sort = () => {
   const [open, setOpen] = useState(false);
-  const [activeSort, setActiveSort] = useState(0);
+  const dispatch = useDispatch();
+  const sort = useSelector(selectSort);
 
-  const sortingBy = [
-    {
-      id: 0,
-      name: "популярності",
-    },
-    {
-      id: 1,
-      name: "ціні",
-    },
-    {
-      id: 2,
-      name: "алфавіту",
-    },
-  ];
+  const sortRef = useRef<HTMLDivElement>(null);
 
-  const handleSort = (id: number) => {
-    setActiveSort(id);
+  const handleSort = (obj: SortItem) => {
+    dispatch(setSort(obj));
     setOpen(false);
-  }; 
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event:any) => {
+      if (!event.composedPath().includes(sortRef.current)) {
+        setOpen(false);
+      }
+    };
+
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => document.body.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
-    <div className="sort">
+    <div className="sort" ref={sortRef}>
       <button className="sort__label" onClick={() => setOpen(!open)}>
         <b>Сортувати по:</b>
-        <span>{sortingBy[activeSort].name}</span>
+        <span>{sort.name}</span>
       </button>
       {open && (
         <div className="sort__popup">
           <ul>
-            {sortingBy &&
-              sortingBy.map((el) => (
-                <li key={el.id} className={activeSort === el.id ? "active" : ""} onClick={() => handleSort(el.id)}>
+            {sortList &&
+              sortList.map((el, id) => (
+                <li key={id} className={sort.sortProperty === el.sortProperty ? "active" : ""} onClick={() => handleSort(el)}>
                   {el.name}
                 </li>
               ))}
