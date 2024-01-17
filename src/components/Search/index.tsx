@@ -9,7 +9,6 @@ const Search = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const dispatch = useDispatch();
 
-
     const onClickClear = () => {
         setValue('');
         inputRef.current?.focus();

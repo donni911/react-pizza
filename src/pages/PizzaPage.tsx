@@ -1,8 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Pizza } from '../components/PizzaBlock';
-
+import { Pizza } from '../redux/slices/cartSlice';
 
 const PizzaPage: React.FC = () => {
     const { id } = useParams();
@@ -15,6 +14,7 @@ const PizzaPage: React.FC = () => {
                 const { data } = await axios.get('https://657c4add853beeefdb991d87.mockapi.io/items', {
                     params: { id }
                 });
+                console.log('pizzas');
 
                 setData(data[0]);
 

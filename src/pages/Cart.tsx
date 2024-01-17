@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CartItem from '../components/Cart/CartItem.tsx';
-import { clearItems, selectCart } from '../redux/slices/cartSlice.ts';
+import { Pizza, clearItems, selectCart } from '../redux/slices/cartSlice.ts';
 
 const Cart = () => {
   const { totalPrice, items } = useSelector(selectCart);
-  const totalCount = items.reduce((sum, obj) => obj.count + sum, 0);
+  const totalCount = items.reduce((sum: number, obj: Pizza) => obj.count + sum, 0);
   const dispatch = useDispatch();
 
 

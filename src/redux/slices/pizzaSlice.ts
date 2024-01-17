@@ -1,32 +1,36 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Pizza } from '../../components/PizzaBlock';
 import axios from 'axios';
+import { Pizza } from './cartSlice';
+import { RootState } from '../store';
 
-export type PizzasState = {
+export interface PizzasSliceState {
     items: Pizza[];
     status: string;
 };
+export type FetchPizzasArgs = Record<string, string>;
 
-const initialState: PizzasState = {
+export enum Status {
+    LOADING = 'loading',
+    COMPLETED = 'completed',
+    ERROR = 'error'
+}
+
+const initialState: PizzasSliceState = {
     items: [],
-    status: '',
+    status: Status.LOADING,
 };
 
-export const fetchPizzaz = createAsyncThunk(
+export const fetchPizzaz = createAsyncThunk<Pizza[], FetchPizzasArgs>(
     'pizza/fetchPizzazStatus',
-    async (params, thunkApi) => {
-        const { data } = await axios.get(
-            `https://657c4add853beeefdb991d87.mockapi.io/items?limit=4`,
+    async (params) => {
+        const { data } = await axios.get<Pizza[]>(
+            `https://657c4add853beeefdb991d87.mockapi.io/items`,
             {
                 params: params
             }
         );
 
-        if (data.length === 0) {
-            return thunkApi.rejectWithValue('PIzza is empty');
-        }
-
-        return thunkApi.fulfillWithValue(data);
+        return data;
     }
 );
 
@@ -41,22 +45,20 @@ export const pizzaSlice = createSlice({
 
     extraReducers: (builder) => {
         builder.addCase(fetchPizzaz.pending, (state) => {
-            state.status = 'pending';
+            state.status = Status.LOADING;
         });
         builder.addCase(fetchPizzaz.fulfilled, (state, action) => {
-            console.log(action);
-            state.status = 'success';
+            state.status = Status.COMPLETED;
             state.items = action.payload;
         });
         builder.addCase(fetchPizzaz.rejected, (state, action) => {
-            console.log(action);
-            state.status = 'error';
+            state.status = Status.ERROR;
             state.items = [];
         });
     }
 });
 
-export const findById = id => state => {
+export const findById = (id: number) => (state: RootState) => {
     return state.pizza.items.find(el => el.id == id);
 };
 

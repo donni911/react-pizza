@@ -1,38 +1,38 @@
 import React from "react";
 
 type CategoriesProps = {
-  value: number,
-  onClickCategory: any;
+  value: number;
+  onClickCategory: (i: number) => void;
 };
 
-const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
+const categories = [
+  {
+    id: 0,
+    name: 'Всі',
+  },
+  {
+    id: 1,
+    name: 'Мясна',
+  },
+  {
+    id: 2,
+    name: 'Вегетеріанська',
+  },
+  {
+    id: 3,
+    name: 'Гриль',
+  },
+  {
+    id: 4,
+    name: 'Гостра',
+  },
+  {
+    id: 5,
+    name: 'Закрита',
+  },
+];
 
-  const categories = [
-    {
-      id: 0,
-      name: 'Всі',
-    },
-    {
-      id: 1,
-      name: 'Мясна',
-    },
-    {
-      id: 2,
-      name: 'Вегетеріанська',
-    },
-    {
-      id: 3,
-      name: 'Гриль',
-    },
-    {
-      id: 4,
-      name: 'Гостра',
-    },
-    {
-      id: 5,
-      name: 'Закрита',
-    },
-  ];
+const Categories: React.FC<CategoriesProps> = ({ value, onClickCategory }) => {
 
   return (
     <div className="categories">

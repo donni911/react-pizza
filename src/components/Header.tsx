@@ -1,12 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import Search from './Search/index';
-import { selectCart } from '../redux/slices/cartSlice';
-import { Pizza } from './PizzaBlock/index.js';
+import { Pizza, selectCart } from '../redux/slices/cartSlice';
 
 const Header = () => {
   const { totalPrice, items } = useSelector(selectCart);
-  const totalCount = items.reduce((sum:number, obj:Pizza) => obj.count + sum, 0);
+  const totalCount = items.reduce((sum: number, obj: Pizza) => obj.count + sum, 0);
 
   const { pathname } = useLocation();
 

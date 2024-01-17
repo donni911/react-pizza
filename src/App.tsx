@@ -1,11 +1,11 @@
 import React, {  useState } from "react";
 import "./scss/app.scss";
-import Header from "./components/Header.tsx";
+import Header from "./components/Header";
 import { Route, Routes } from "react-router-dom";
-import Home from './pages/Home.tsx';
-import Cart from './pages/Cart.tsx';
-import NotFound from './pages/NotFound.tsx';
-import PizzaPage from "./pages/PizzaPage.tsx";
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import NotFound from './pages/NotFound';
+import PizzaPage from "./pages/PizzaPage";
 
 
 

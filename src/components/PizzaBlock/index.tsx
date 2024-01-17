@@ -1,22 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, selectCartItem } from '../../redux/slices/cartSlice';
+import { Pizza, addItem, selectCartItem } from '../../redux/slices/cartSlice';
 import { Link } from 'react-router-dom';
 
-export type Pizza = {
-  id: number;
-  imageUrl: string;
-  title: string;
-  types: number[];
-  sizes: number[];
-  price: number;
-  category: number;
-  count?: number;
-  rating: number;
-};
-
 type PizzaBlockProps = {
-  key?: number,
+  key?: number|string,
   pizza: Pizza;
 };
 
@@ -42,9 +30,9 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({ pizza }) => {
       price: pizza.price,
       imageUrl: pizza.imageUrl,
       type: activeType,
-      size: activeSize
+      sizes: activeSize
     };
-
+// @ts-ignore
     dispatch(addItem(item));
   };
 
@@ -59,10 +47,16 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({ pizza }) => {
           {pizza.types.length &&
             pizza.types.map((type, id) => (
               <li
+              // @ts-ignore
                 className={activeType === typeNames[type] ? 'active' : ''}
+                // @ts-ignore
                 onClick={() => setActiveType(typeNames[type])}
                 key={id}>
-                {typeNames[type]}
+                  
+                {
+                  // @ts-ignore
+                typeNames[type]
+                }
               </li>
             ))}
         </ul>

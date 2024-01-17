@@ -1,11 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSort, setSort } from "../redux/slices/filterSlice";
+import { SortItem, selectSort, setSort } from "../redux/slices/filterSlice";
 
-type SortItem = {
-  sortProperty: string,
-  name: string;
-};
 
 export const sortList: SortItem[] = [
   {
@@ -37,6 +33,7 @@ export const sortList: SortItem[] = [
 const Sort = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  
   const sort = useSelector(selectSort);
 
   const sortRef = useRef<HTMLDivElement>(null);
@@ -47,14 +44,13 @@ const Sort = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event:any) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setOpen(false);
       }
     };
 
     document.body.addEventListener('click', handleClickOutside);
-
     return () => document.body.removeEventListener('click', handleClickOutside);
   }, []);
 
@@ -69,7 +65,10 @@ const Sort = () => {
           <ul>
             {sortList &&
               sortList.map((el, id) => (
-                <li key={id} className={sort.sortProperty === el.sortProperty ? "active" : ""} onClick={() => handleSort(el)}>
+                <li
+                  key={id}
+                  className={sort.sortProperty === el.sortProperty ? "active" : ""}
+                  onClick={() => handleSort(el)}>
                   {el.name}
                 </li>
               ))}

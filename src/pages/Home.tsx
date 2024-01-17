@@ -1,24 +1,28 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
 import Categories from '../components/Categories.tsx';
-import PizzaBlock, { Pizza } from '../components/PizzaBlock/index.tsx';
+import PizzaBlock from '../components/PizzaBlock/index.tsx';
 import Sort, { sortList } from '../components/Sort.tsx';
 import Skeleton from '../components/PizzaBlock/Skeleton.tsx';
 
 import Pagination from '../components/Pagination/index.tsx';
-import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice.ts';
+import { FilterSliceState, setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice.ts';
 import qs from 'qs';
-import { fetchPizzaz } from '../redux/slices/pizzaSlice.ts';
+import { fetchPizzaz, FetchPizzasArgs } from '../redux/slices/pizzaSlice.ts';
+import { Pizza } from '../redux/slices/cartSlice.ts';
+import { useAppDispatch } from '../redux/store.ts';
+
 
 const Home = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const isSearch = useRef(false);
     const isMounted = useRef(false);
-
+    // @ts-ignore
     const { categoryId, sort, currentPage, searchValue } = useSelector(state => state.filter);
+    // @ts-ignore
     const { items, status } = useSelector(state => state.pizza);
 
     const sortType = sort.sortProperty;
@@ -27,13 +31,13 @@ const Home = () => {
     const pizzaz = items.map((item: Pizza) => <PizzaBlock key={item.id} pizza={item} />);
     const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
-    const onChangeCategory = (id) => {
+    const onChangeCategory = (id: number) => {
         dispatch(setCategoryId(id));
     };
 
     const getPizzaz = async () => {
 
-        const params: Params = {};
+        const params: FetchPizzasArgs = {};
 
         if (categoryId > 0) {
             params.category = categoryId;
@@ -52,22 +56,11 @@ const Home = () => {
             params.page = currentPage;
         }
 
-
-        dispatch(fetchPizzaz(params));
-
-
+        dispatch(fetchPizzaz({ ...params }));
     };
 
-    const onChangePage = (num) => {
+    const onChangePage = (num: number) => {
         dispatch(setCurrentPage(num));
-    };
-
-    type Params = {
-        category?: number | string,
-        order?: string,
-        sortBy?: number | string,
-        search?: string,
-        page?: string;
     };
 
     useEffect(() => {
@@ -81,6 +74,7 @@ const Home = () => {
             navigate(`?${queryString}`);
         }
         isMounted.current = true;
+        
     }, [categoryId, currentPage, sortType]);
 
 
@@ -97,10 +91,19 @@ const Home = () => {
 
     useEffect(() => {
         if (window.location.search) {
-            const params = qs.parse(window.location.search.substring(1));
+            // @ts-ignore
+            const params:FilterSliceState = qs.parse(window.location.search.substring(1));
+            // @ts-ignore
             const sort = sortList.find(el => el.sortProperty === params.sortProperty);
 
-            dispatch(setFilters({ ...params, sort }));
+            dispatch(setFilters({
+                // @ts-ignore
+                searchValue: String(params.search),
+                // @ts-ignore
+                categoryId: Number(params.category),
+                currentPage: Number(params.currentPage),
+                sort: sort || sortList[0],
+            }));
 
             isSearch.current = true;
         }
